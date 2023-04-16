@@ -58,8 +58,6 @@ const handleValidateClick = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      // message.success('Valid')
-
       const [data, error] = await login(formValue.value.phone)
       if (error) {
         message.error('Произошла ошибка')
@@ -69,11 +67,9 @@ const handleValidateClick = (e: MouseEvent) => {
       savedPhone.value = formValue.value.phone
       savedCourier.value = data
 
-      // selectedStatus.value = data.status
       console.log(data)
     } else {
       console.log(errors)
-      // message.error('Invalid')
     }
   })
 }
@@ -206,6 +202,24 @@ const openHistoryModal = async () => {
 const closeHistoryModal = () => {
   showHistoryModal.value = false
 }
+
+const formatStatus = (status: string) => {
+  if (status === 'in_order') {
+    return 'В заказе'
+  }
+  if (status === 'active') {
+    return 'Активен'
+  }
+  if (status === 'inactive') {
+    return 'Неактивен'
+  }
+  if (status === 'in_delivery') {
+    return 'В доставке'
+  }
+  if (status === 'delivery_id') {
+    return 'Доставлен'
+  }
+}
 </script>
 
 <template>
@@ -271,7 +285,7 @@ const closeHistoryModal = () => {
             <template #footer>
               <div class="flex w-full items-end justify-between gap-x-12">
                 <NTag :bordered="false" round type="info">
-                  {{ currentDelivery.status }}
+                  {{ formatStatus(currentDelivery.status) }}
                 </NTag>
                 <n-button size="small" @click="openModal(currentDelivery.id)" quaternary>
                   Обновить статус
@@ -321,7 +335,7 @@ const closeHistoryModal = () => {
                 <template #footer>
                   <div class="flex w-full items-end justify-between gap-x-12">
                     <NTag :bordered="false" round type="info">
-                      {{ item.status }}
+                      {{ formatStatus(item.status) }}
                     </NTag>
                   </div>
                 </template>
